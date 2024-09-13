@@ -1,2 +1,2 @@
 # improved-spoon
-Improve Spoon
+Improved Spoon
