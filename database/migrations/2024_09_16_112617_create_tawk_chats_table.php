@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('tawk_chats', function (Blueprint $table) {
             $table->id();
+            $table->string('chat_link');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
