@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('footers', function (Blueprint $table) {
             $table->id();
+            $table->string('first_column')->nullable();
+            $table->string('second_column')->nullable();
+            $table->string('third_column')->nullable();
             $table->timestamps();
         });
     }
