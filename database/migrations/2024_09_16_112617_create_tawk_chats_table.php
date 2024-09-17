@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('chat_link');
             $table->integer('status')->default(1);
+            $table->string('widget_id')->nullable();
+            $table->string('property_id')->nullable();
             $table->timestamps();
         });
     }
