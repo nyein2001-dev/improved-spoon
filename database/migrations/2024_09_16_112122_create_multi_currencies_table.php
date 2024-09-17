@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('multi_currencies', function (Blueprint $table) {
             $table->id();
+            $table->string('currency_name');
+            $table->string('country_code');
+            $table->string('currency_code');
+            $table->string('currency_icon');
+            $table->string('is_default')->default('No');
+            $table->double('currency_rate');
+            $table->string('currency_position');
+            $table->string('status')->default(0);
             $table->timestamps();
         });
     }
