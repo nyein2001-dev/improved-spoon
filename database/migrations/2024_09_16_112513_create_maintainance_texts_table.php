@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('maintainance_texts', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
+            $table->text('description');
             $table->timestamps();
         });
     }
