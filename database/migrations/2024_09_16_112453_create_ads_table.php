@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('ads', function (Blueprint $table) {
             $table->id();
+            $table->string('image')->nullable();
+            $table->text('link')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
