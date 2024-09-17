@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug');
+            $table->string('logo');
+            $table->integer('status')->default(0);
+            $table->integer('is_featured')->default(0);
+            $table->integer('is_top')->default(0);
+            $table->integer('is_popular')->default(0);
+            $table->integer('is_trending')->default(0);
             $table->timestamps();
         });
     }
