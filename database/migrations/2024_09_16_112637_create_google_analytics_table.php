@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('google_analytics', function (Blueprint $table) {
             $table->id();
+            $table->string('analytic_id');
+            $table->integer('status');
             $table->timestamps();
         });
     }
