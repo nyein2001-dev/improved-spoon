@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('facebook_pixels', function (Blueprint $table) {
             $table->id();
+            $table->integer('status')->default(0);
+            $table->string('app_id')->nullable();
             $table->timestamps();
         });
     }
