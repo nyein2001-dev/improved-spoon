@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('error_pages', function (Blueprint $table) {
             $table->id();
+            $table->string('page_name');
+            $table->string('page-number');
+            $table->string('header');
+            $table->string('description');
+            $table->string('button_text');
             $table->timestamps();
         });
     }
