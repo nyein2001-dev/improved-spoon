@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('google_recaptchas', function (Blueprint $table) {
             $table->id();
+            $table->string('site_key')->nullable();
+            $table->string('secret_key')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
