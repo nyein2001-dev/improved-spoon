@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () {
 
     Route::get('/website-setup', [HomeController::class, 'website_setup'])->name('website-setup');
+
+    Route::post('/newsletter-request', [HomeController::class, 'newsletter_request'])->name('newsletter-request');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

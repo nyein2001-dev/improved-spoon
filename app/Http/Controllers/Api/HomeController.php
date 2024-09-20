@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\MailHelper;
+use Illuminate\Support\Str;
+
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
 use App\Models\Category;
 use App\Models\CookieConsent;
+use App\Models\EmailTemplate;
 use App\Models\ErrorPage;
 use App\Models\FacebookPixel;
 use App\Models\Footer;
@@ -16,10 +20,15 @@ use App\Models\Language;
 use App\Models\MaintainanceText;
 use App\Models\MultiCurrency;
 use App\Models\Setting;
+use App\Models\Subscriber;
 use App\Models\TawkChat;
 use Exception;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+
+use App\Mail\SubscriptionVerification;
 
 class HomeController extends Controller
 {
@@ -62,7 +71,7 @@ class HomeController extends Controller
 
         $this->translator($lang_code);
         try {
-            $filePath = base_path('lang/'.$lang_code.'/user.php');
+            $filePath = base_path('lang/' . $lang_code . '/user.php');
             if (file_exists($filePath)) {
                 $localizations = include($filePath);
             } else {
@@ -116,6 +125,46 @@ class HomeController extends Controller
             'footer' => $footer,
         ]);
     }
+
+    public function newsletter_request(Request $request)
+    {
+
+        $this->translator($request->lang_code);
+
+        $rules = [
+            'email' => 'required|unique:subscribers',
+            'redirect_url' => 'required',
+        ];
+
+        $customMessages = [
+            'email.required' => trans('user_validation.Email is required'),
+            'redirect_url.required' => trans('user_validation.Url is required')
+        ];
+
+        $this->validate($request, $rules, $customMessages);
+
+        $subscriber = new Subscriber();
+        $subscriber->email = $request->email;
+        $subscriber->verified_token = Str::random(25);
+        $subscriber->save();
+
+        MailHelper::setMailConfig();
+
+        $template = EmailTemplate::where('id', 3)->first();
+        $message = $template->description;
+        $subject = $template->subject;
+
+        $verification_link = route('newsletter-verification') . '?verification_link=' . $subscriber->verified_token . '&email=' . $subscriber->email . '&redirect_url=' . $request->redirect_url;
+        $verification_link = '<a href="' . $verification_link . '">' . $verification_link . '</a>';
+
+        try {
+            Mail::to($subscriber->email)->send(new SubscriptionVerification($subscriber, $message, $subject, $verification_link));
+        } catch (Exception $ex) {
+        }
+
+        return response()->json(['message' => trans('user_validation.A verification link send to your mail, please check and verify it')]);
+    }
+
     /**
      * Display a listing of the resource.
      *
