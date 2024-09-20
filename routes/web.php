@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Admin\Auth\AdminLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,14 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::group(['middleware' => ['demo', 'XSS']], function () {
 
-Route::get('/articles', function () {
-    return 'Article List';
-});
+    Route::group(['middleware' => ['maintainance']], function () {
 
-Route::get('/articles/detail', function () {
-    return 'Article Detail';
+        Route::group(['middleware' => ['HtmlSpecialchars']], function () {
+
+            Route::get('/', function (Request $request) {
+                return redirect()->route('admin.login');
+            });
+
+
+            Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+                Route::get('login', [AdminLoginController::class, 'adminLoginPage'])->name('login');
+                Route::post('login', [AdminLoginController::class, 'storeLogin'])->name('store-login');
+                Route::post('logout', [AdminLoginController::class, 'adminLogout'])->name('logout');
+            });
+        });
+    });
 });

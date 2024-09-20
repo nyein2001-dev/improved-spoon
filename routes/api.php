@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\User\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,13 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
 
     Route::get('/website-setup', [HomeController::class, 'website_setup'])->name('website-setup');
 
-    Route::post('/newsletter-request', [HomeController::class, 'newsletter_request'])->name('newsletter-request');
+    Route::group(['middleware' => ['maintainance']], function () {
+        Route::prefix('user')->group(function () {
+            Route::get('/cart-items', [CartController::class, 'cart_items'])->name('cart-items');
+        });
+
+        Route::post('/newsletter-request', [HomeController::class, 'newsletter_request'])->name('newsletter-request');
+    });
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
