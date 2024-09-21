@@ -21,6 +21,9 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
     Route::get('/website-setup', [HomeController::class, 'website_setup'])->name('website-setup');
 
     Route::group(['middleware' => ['maintainance']], function () {
+
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+
         Route::prefix('user')->group(function () {
             Route::get('/cart-items', [CartController::class, 'cart_items'])->name('cart-items');
         });

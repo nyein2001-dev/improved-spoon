@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\CookieConsent;
 use App\Models\EmailTemplate;
 use App\Models\ErrorPage;
@@ -84,7 +85,7 @@ class HomeController extends Controller
         }
 
 
-        $categories = Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
+        $categories = Category::select('id', 'name', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
 
         $links = FooterSocialLink::all();
 
@@ -170,9 +171,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Category::all();
+
+        $this->translator($request->lang_code);
+
+        $categories = Category::select('id', 'name', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
+
+
+        $recommend_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1])->limit(9)->get();
+
+        return response()->json([
+            'categories' => $categories,
+            'recommend_products' => $recommend_products,
+        ]);
     }
 
     /**
