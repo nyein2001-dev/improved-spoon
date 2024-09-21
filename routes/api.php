@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\User\CartController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
         });
 
         Route::post('/newsletter-request', [HomeController::class, 'newsletter_request'])->name('newsletter-request');
+
+        Route::post('/store-register', [RegisterController::class, 'store_register'])->name('store-register');
     });
 });
 
