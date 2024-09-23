@@ -76,4 +76,12 @@ class LoginController extends Controller
             'user' => $user
         ]);
     }
+
+    public function user_logout(Request $request)
+    {
+        $this->translator($request->lang_code);
+        Auth::guard('api')->logout();
+        $notification = trans('user_validation.Logout Successfully');
+        return response()->json(['message' => $notification]);
+    }
 }
