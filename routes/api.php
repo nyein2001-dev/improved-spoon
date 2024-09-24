@@ -28,7 +28,10 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
         Route::get('/', [HomeController::class, 'index'])->name('home');
 
         Route::prefix('user')->group(function () {
+
             Route::get('wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
+            Route::post('/add/wishlist/{product_id}', [WishlistController::class, 'add_wishlist'])->name('add-wishlist');
+            Route::delete('/delete/wishlist/{id}', [WishlistController::class, 'delete_wishlist'])->name('delete-wishlist');
 
             Route::get('/cart-items', [CartController::class, 'cart_items'])->name('cart-items');
         });
