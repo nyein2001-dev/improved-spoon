@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Mail;
 
 
 use App\Mail\SubscriptionVerification;
+use App\Models\Homepage;
 
 class HomeController extends Controller
 {
@@ -176,13 +177,60 @@ class HomeController extends Controller
 
         $this->translator($request->lang_code);
 
-        $categories = Category::select('id', 'name', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
+        $homepage = Homepage::with('homelangfrontend')->first();
 
+        $categories = Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
+
+        $home_category = $homepage;
+
+        $home_category_one =  Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->where('id', $home_category->category_one)->first();
+
+        $category_one_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1, 'category_id' => $home_category->category_one])->limit(9)->get();
+
+        $category_one = (object) array(
+            'category' => $home_category_one,
+            'products' => $category_one_products,
+        );
+
+        $trending_categories = Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->whereIn('id', json_decode($home_category->trending_categories))->get();
+
+        $home_category_three =  Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->where('id', $home_category->category_three)->first();
+
+        $category_three_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1, 'category_id' => $home_category->category_three])->limit(9)->get();
+
+        $category_three = (object) array(
+            'category' => $home_category_three,
+            'products' => $category_three_products,
+        );
+
+        $home_category_four =  Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->where('id', $home_category->category_four)->first();
+
+        $category_four_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1, 'category_id' => $home_category->category_four])->limit(9)->get();
+
+        $category_four = (object) array(
+            'category' => $home_category_four,
+            'products' => $category_four_products,
+        );
+
+        $counter = (object) array(
+            'counter1_title' => $homepage->homelangfrontend->counter1_title,
+            'counter2_title' => $homepage->homelangfrontend->counter2_title,
+            'counter3_title' => $homepage->homelangfrontend->counter3_title,
+            'counter4_title' => $homepage->homelangfrontend->counter4_title,
+            'counter1_value' => (int) $homepage->counter1_value,
+            'counter2_value' => (int) $homepage->counter2_value,
+            'counter3_value' => (int) $homepage->counter3_value,
+            'counter4_value' => (int) $homepage->counter4_value,
+        );
 
         $recommend_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1])->limit(9)->get();
 
         return response()->json([
             'categories' => $categories,
+            'category_one' => $category_one,
+            'category_three' => $category_three,
+            'category_four' => $category_four,
+            'counter' => $counter,
             'recommend_products' => $recommend_products,
         ]);
     }
