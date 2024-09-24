@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\User\CartController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\User\WishlistController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
         Route::get('/', [HomeController::class, 'index'])->name('home');
 
         Route::prefix('user')->group(function () {
+            Route::get('wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
+
             Route::get('/cart-items', [CartController::class, 'cart_items'])->name('cart-items');
         });
 
@@ -34,6 +37,8 @@ Route::group(['middleware' => ['demo', 'XSS', 'HtmlSpecialchars']], function () 
 
         Route::post('/store-login', [LoginController::class, 'store_login'])->name('store-login');
         Route::post('/store-register', [RegisterController::class, 'store_register'])->name('store-register');
+
+        Route::get('/user-logout', [LoginController::class, 'user_logout'])->name('user.logout');
     });
 });
 
