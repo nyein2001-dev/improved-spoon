@@ -3,10 +3,27 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 class AdminLoginController extends Controller
 {
+    use AuthenticatesUsers;
+
+    protected $redirectTo = RouteServiceProvider::HOME;
+
+    public function __construct()
+    {
+        $this->middleware('guest:admin')->except('adminLogout');
+    }
+
+    public function adminLoginPage()
+    {
+        $setting = Setting::first();
+        return view('admin.auth.login', compact('setting'));
+    }
     /**
      * Display a listing of the resource.
      *
