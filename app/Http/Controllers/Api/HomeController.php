@@ -23,6 +23,7 @@ use App\Models\MultiCurrency;
 use App\Models\Setting;
 use App\Models\Subscriber;
 use App\Models\TawkChat;
+use App\Models\SeoSetting;
 use Exception;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Mail\SubscriptionVerification;
 use App\Models\Homepage;
+use App\Models\Partner;
 
 class HomeController extends Controller
 {
@@ -179,6 +181,8 @@ class HomeController extends Controller
 
         $homepage = Homepage::with('homelangfrontend')->first();
 
+        $slider_banners = Partner::where('status', 1)->select('link', 'logo as image', 'status', 'title', 'sub_title')->latest()->get();
+
         $categories = Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->latest()->get();
 
         $home_category = $homepage;
@@ -193,6 +197,14 @@ class HomeController extends Controller
         );
 
         $trending_categories = Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->whereIn('id', json_decode($home_category->trending_categories))->get();
+
+        $trending_products = Product::with('reviews')->select('id', 'slug', 'thumbnail_image', 'status', 'regular_price', 'offer_price', 'category_id')->where(['status' => 1])->whereIn('category_id', json_decode($home_category->trending_categories))->limit(15)->get();
+
+        $trending = (object) array(
+            'categories' => $trending_categories,
+            'products' => $trending_products,
+        );
+
 
         $home_category_three =  Category::select('id', 'slug', 'icon', 'status')->where('status', 1)->where('id', $home_category->category_three)->first();
 
@@ -225,9 +237,14 @@ class HomeController extends Controller
 
         $recommend_products = Product::select('id', 'slug', 'thumbnail_image', 'status', 'category_id', 'regular_price', 'offer_price')->where(['status' => 1])->limit(9)->get();
 
+        $seo_setting = SeoSetting::where('id', 1)->select('id', 'page_name', 'seo_title', 'seo_description')->first();
+
         return response()->json([
+            'seo_setting' => $seo_setting,
+            'slider_banners' => $slider_banners,
             'categories' => $categories,
             'category_one' => $category_one,
+            'trending' => $trending,
             'category_three' => $category_three,
             'category_four' => $category_four,
             'counter' => $counter,
