@@ -38,8 +38,8 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::post('logout', [AdminLoginController::class, 'adminLogout'])->name('logout');
                 Route::get('forget-password', [AdminForgotPasswordController::class, 'forgetPassword'])->name('forget-password');
 
-                Route::get('/', [DashboardController::class, 'dashobard']);
-                Route::get('dashboard', [DashboardController::class, 'dashobard'])->name('dashboard');
+                Route::get('/', [DashboardController::class, 'dashboard']);
+                Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
             });
         });
     });
