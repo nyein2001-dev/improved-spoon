@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Models\Admin;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminLoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::ADMIN;
 
     public function __construct()
     {
@@ -24,58 +27,54 @@ class AdminLoginController extends Controller
         $setting = Setting::first();
         return view('admin.auth.login', compact('setting'));
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+
+    public function storeLogin(Request $request)
     {
-        //
+
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required',
+        ];
+
+        $customMessages = [
+            'email.required' => trans('admin_validation.Email is required'),
+            'password.required' => trans('admin_validation.Password is required'),
+        ];
+        $this->validate($request, $rules, $customMessages);
+
+        $credential = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        $isAdmin = Admin::where('email', $request->email)->first();
+        if ($isAdmin) {
+            if ($isAdmin->status == 1) {
+                if (Hash::check($request->password, $isAdmin->password)) {
+                    if (Auth::guard('admin')->attempt($credential, $request->remember)) {
+                        $notification = trans('admin_validation.Login Successfully');
+                        return response()->json(['success' => $notification]);
+                    }
+                } else {
+                    $notification = trans('admin_validation.Invalid Password');
+                    return response()->json(['error' => $notification]);
+                }
+            } else {
+                $notification = trans('admin_validation.Inactive account');
+                return response()->json(['error' => $notification]);
+            }
+        } else {
+            $notification = trans('admin_validation.Invalid Email');
+            return response()->json(['error' => $notification]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function adminLogout()
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        Auth::guard('admin')->logout();
+        $notification = trans('admin_validation.Logout Successfully');
+        $notification = array('messege' => $notification, 'alert-type' => 'success');
+        return redirect()->route('admin.login')->with($notification);
     }
 }

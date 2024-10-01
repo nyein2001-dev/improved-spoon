@@ -29,11 +29,14 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
             });
 
 
+            // start admin routes
             Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+
+                // start auth route
                 Route::get('login', [AdminLoginController::class, 'adminLoginPage'])->name('login');
                 Route::post('login', [AdminLoginController::class, 'storeLogin'])->name('store-login');
                 Route::post('logout', [AdminLoginController::class, 'adminLogout'])->name('logout');
-                Route::get('forget-password', [AdminForgotPasswordController::class,'forgetPassword'])->name('forget-password');
+                Route::get('forget-password', [AdminForgotPasswordController::class, 'forgetPassword'])->name('forget-password');
 
                 Route::get('/', [DashboardController::class, 'dashobard']);
                 Route::get('dashboard', [DashboardController::class, 'dashobard'])->name('dashboard');
