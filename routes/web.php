@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
+use App\Http\Controllers\Admin\AdminProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::post('login', [AdminLoginController::class, 'storeLogin'])->name('store-login');
                 Route::post('logout', [AdminLoginController::class, 'adminLogout'])->name('logout');
                 Route::get('forget-password', [AdminForgotPasswordController::class, 'forgetPassword'])->name('forget-password');
+
+                Route::get('profile', [AdminProfileController::class, 'index'])->name('profile');
 
                 Route::get('/', [DashboardController::class, 'dashboard']);
                 Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
