@@ -41,6 +41,7 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::get('forget-password', [AdminForgotPasswordController::class, 'forgetPassword'])->name('forget-password');
 
                 Route::get('profile', [AdminProfileController::class, 'index'])->name('profile');
+                Route::put('profile-update', [AdminProfileController::class, 'update'])->name('profile.update');
 
                 Route::get('all-booking', [OrderController::class, 'index'])->name('all-booking');
                 Route::get('pending-order', [OrderController::class, 'pendingOrder'])->name('pending-order');
