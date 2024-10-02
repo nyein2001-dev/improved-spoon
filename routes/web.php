@@ -43,6 +43,8 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::get('profile', [AdminProfileController::class, 'index'])->name('profile');
 
                 Route::get('all-booking', [OrderController::class, 'index'])->name('all-booking');
+                Route::get('pending-order', [OrderController::class, 'pendingOrder'])->name('pending-order');
+                Route::get('complete-order', [OrderController::class, 'completeOrder'])->name('complete-order');
 
                 Route::get('order-show/{id}', [OrderController::class, 'show'])->name('order-show');
 
