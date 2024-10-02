@@ -15,6 +15,14 @@
                             <div class="card-icon bg-primary">
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>{{ __('admin.Total Order') }}</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ $total_total_order }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
