@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Admin\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,10 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::get('forget-password', [AdminForgotPasswordController::class, 'forgetPassword'])->name('forget-password');
 
                 Route::get('profile', [AdminProfileController::class, 'index'])->name('profile');
+
+                Route::get('all-booking', [OrderController::class, 'index'])->name('all-booking');
+
+                Route::get('order-show/{id}', [OrderController::class, 'show'])->name('order-show');
 
                 Route::get('/', [DashboardController::class, 'dashboard']);
                 Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
