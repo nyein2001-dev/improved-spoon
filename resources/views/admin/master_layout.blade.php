@@ -68,6 +68,8 @@
                 </ul>
             </nav>
 
+            @include('admin.sidebar')
+
             @yield('admin-content')
 
             <footer class="main-footer">
