@@ -51,6 +51,8 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
                 Route::get('complete-order', [OrderController::class, 'completeOrder'])->name('complete-order');
 
                 Route::get('order-show/{id}', [OrderController::class, 'show'])->name('order-show');
+                Route::delete('delete-order/{id}', [OrderController::class, 'destroy'])->name('delete-order');
+                Route::put('update-order-status/{id}', [OrderController::class, 'updateOrderStatus'])->name('update-order-status');
 
                 Route::get('/', [DashboardController::class, 'dashboard']);
                 Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');

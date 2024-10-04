@@ -47,4 +47,11 @@ class OrderController extends Controller
 
         return view('admin.order', compact('orders', 'title', 'currency_icon', 'providers', 'clients'));
     }
+
+    public function show($id)
+    {
+        $order = Order::with('user')->find($id);
+        $setting = Setting::first();
+        return view('admin.show_order', compact('order', 'setting'));
+    }
 }
