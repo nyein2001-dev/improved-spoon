@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,8 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
 
                 Route::get('profile', [AdminProfileController::class, 'index'])->name('profile');
                 Route::put('profile-update', [AdminProfileController::class, 'update'])->name('profile.update');
+
+                Route::get('customer-show/{id}', [CustomerController::class, 'show'])->name('customer-show');
 
                 Route::get('all-booking', [OrderController::class, 'index'])->name('all-booking');
                 Route::get('pending-order', [OrderController::class, 'pendingOrder'])->name('pending-order');
