@@ -13,6 +13,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.5",
+        "mews/purifier": "^3.4",
         "nesbot/carbon": "^2.72",
         "tymon/jwt-auth": "^2.1"
     },
